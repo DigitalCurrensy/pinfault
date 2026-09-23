@@ -20,6 +20,7 @@ A pretty name is not an input. A missing field prints missing.
 from __future__ import annotations
 
 import csv
+import math
 import sys
 from pathlib import Path
 
@@ -37,6 +38,14 @@ def cell(text: str | None) -> float | None:
         return float(stripped)
     except ValueError:
         return None
+
+
+def _show(value: float | None) -> str:
+    if value is None:
+        return "missing"
+    if not math.isfinite(value):
+        return "bad"
+    return f"{value:.10g}"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -67,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
                 word = "missing"
             else:
                 word = integrity(void, slope, offset)
-            print(f"{name} {word}")
+            print(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)}")
     return 0
 
 

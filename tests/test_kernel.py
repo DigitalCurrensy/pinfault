@@ -132,7 +132,13 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(
             out.getvalue().splitlines(),
-            ["flat ok", "hole voids", "steep slope", "far offset", "blank missing"],
+            [
+                "flat ok void=0.02 slope=2 offset=10",
+                "hole voids void=0.2 slope=2 offset=10",
+                "steep slope void=0.02 slope=25 offset=10",
+                "far offset void=0.02 slope=2 offset=40",
+                "blank missing void=missing slope=2 offset=10",
+            ],
         )
 
     def test_counts_csv(self) -> None:
@@ -156,13 +162,13 @@ class CliTests(unittest.TestCase):
         self.assertEqual(
             out.getvalue().splitlines(),
             [
-                "hole voids",
-                "flat ok",
-                "bad missing",
-                "full voids",
-                "neg missing",
-                "down missing",
-                "left missing",
+                "hole voids void=0.2 slope=2 offset=10",
+                "flat ok void=0.02 slope=2 offset=10",
+                "bad missing void=missing slope=2 offset=10",
+                "full voids void=1 slope=2 offset=10",
+                "neg missing void=missing slope=2 offset=10",
+                "down missing void=0.02 slope=-3 offset=10",
+                "left missing void=0.02 slope=2 offset=-4",
             ],
         )
 
