@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
+
+
+def _bad(value: float | None) -> bool:
+    return value is not None and not math.isfinite(value)
+
+
 def integrity(void_fraction: float | None, slope_deg: float | None, offset_m: float | None) -> str:
+    if _bad(void_fraction) or _bad(slope_deg) or _bad(offset_m):
+        return "missing"
     if void_fraction is None or void_fraction < 0 or void_fraction > 1:
         return "missing"
     if void_fraction > 0.15:

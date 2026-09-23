@@ -167,5 +167,11 @@ class CliTests(unittest.TestCase):
         )
 
 
+
+class FinitePinTests(unittest.TestCase):
+    def test_non_finite_is_missing(self) -> None:
+        self.assertEqual(integrity(float("nan"), 2.0, 10.0), "missing")
+
+
 if __name__ == "__main__":
     unittest.main()

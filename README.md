@@ -14,7 +14,7 @@ A word: voids, slope, offset, ok, or missing. Voids first, then slope, then offs
 
 This does not read a map or a DEM. The caller supplies void fraction, slope, and offset. A pretty name is not an input.
 
-Void fraction must be in [0, 1]. A fraction below 0 or above 1 is missing, before the 0.15 gate. Void fraction above 0.15 is voids, so 0.20 is voids. 1.0 is not above 1, so it is not missing, and 1.0 is above 0.15, so it is voids. Slope above 20 degrees is slope. A negative slope is missing, before that gate. Offset above 30 m is offset. A negative offset is missing, before that gate. A missing offset stays missing. It is not ok. A None void fraction or a None slope is missing, because that comparison cannot be made. Otherwise the pin is ok.
+Void fraction must be in [0, 1]. A fraction below 0 or above 1 is missing, before the 0.15 gate. Void fraction above 0.15 is voids, so 0.20 is voids. 1.0 is not above 1, so it is not missing, and 1.0 is above 0.15, so it is voids. Slope above 20 degrees is slope. A negative slope is missing, before that gate. Offset above 30 m is offset. A negative offset is missing, before that gate. A missing offset stays missing. It is not ok. A non-finite number is missing. A None void fraction or a None slope is missing, because that comparison cannot be made. Otherwise the pin is ok.
 
 On the command line, a missing field prints missing and is not scored. If the CSV has n_invalid and n_cells, those counts are passed to void_fraction() and that fraction is passed to integrity. If void_fraction() returns None, the line prints missing. The process exits 0.
 
