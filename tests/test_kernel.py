@@ -16,15 +16,18 @@
 
 from __future__ import annotations
 
+import io
 import math
 import sys
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1] / "src"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from pinfault.__main__ import main  # noqa: E402
 from pinfault.memo import compile_memo  # noqa: E402
 from pinfault.score import integrity  # noqa: E402
 from pinfault.void_fraction import A11 as A11_VOID  # noqa: E402
@@ -39,6 +42,18 @@ class ScoreTests(unittest.TestCase):
         self.assertEqual(integrity(0.02, 2, 10), "ok")
         self.assertEqual(integrity(0.02, 2, None), "ok")
 
+    def test_none_offset_void_none_or_negative_slope_none(self) -> None:
+        self.assertEqual(integrity(0.02, 2, None), "ok")
+        self.assertEqual(integrity(None, 2, 10), "missing")
+        self.assertEqual(integrity(None, None, None), "missing")
+        self.assertEqual(integrity(-0.01, 2, 10), "ok")
+        self.assertEqual(integrity(-0.01, 25, 10), "slope")
+        self.assertEqual(integrity(-0.01, 2, 40), "offset")
+        self.assertEqual(integrity(0.02, None, 10), "missing")
+        self.assertEqual(integrity(-0.01, None, 10), "missing")
+        self.assertEqual(integrity(0.20, None, None), "voids")
+        self.assertEqual(integrity(0.02, 21, None), "slope")
+
 
 class VoidTests(unittest.TestCase):
     def test_formula(self) -> None:
@@ -50,6 +65,12 @@ class VoidTests(unittest.TestCase):
         sit = void_fraction(15, 100)
         assert sit is not None
         self.assertEqual(integrity(sit, 2, 400), "offset")
+
+    def test_nonpositive_cells_or_negative_invalid(self) -> None:
+        self.assertIsNone(void_fraction(1, 0))
+        self.assertIsNone(void_fraction(1, -3))
+        self.assertIsNone(void_fraction(-1, 100))
+        self.assertIsNone(void_fraction(-2, -2))
 
 
 class WalkTests(unittest.TestCase):
@@ -91,6 +112,19 @@ class MemoTests(unittest.TestCase):
         self.assertTrue(ok["issued"])
         self.assertEqual(ok["stamp"], "ok")
         self.assertNotEqual(ok["pin_id"], A11["id"])
+
+
+class CliTests(unittest.TestCase):
+    def test_pins_csv(self) -> None:
+        repo = Path(__file__).resolve().parents[1]
+        out = io.StringIO()
+        with redirect_stdout(out):
+            code = main([str(repo / "examples" / "pins.csv")])
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            out.getvalue().splitlines(),
+            ["flat ok", "hole voids", "steep slope", "far offset", "blank missing"],
+        )
 
 
 if __name__ == "__main__":

@@ -1,34 +1,42 @@
 # PINFAULT
 
-For a mapper dropping a landing pin onto ground that may be a void, a slope, or the wrong place.
+Score a pin against void fraction, slope, and offset.
 
 **Owner:** Digital Currensy Inc.
 **Copyright:** 2026 Digital Currensy Inc.
-**License:** Apache-2.0. The file named LICENSE is the standard license and is not edited. The copyright notice is in NOTICE and at the top of each source file. Cited data and papers stay with their authors.
+**License:** Apache-2.0. The file named LICENSE is the standard license and is not edited. The copyright notice is in NOTICE and at the top of each source file.
+
 ## What it decides
 
-The pin stands, or it does not. Voids first, then slope, then offset from the named feature.
+A word: voids, slope, offset, ok, or missing. Voids first, then slope, then offset.
 
 ## The rule
 
-A pin inside a void fails. A pin on a slope past the limit fails. A pin offset from the named feature fails. A pretty marker with a missing tile, a missing identity, or no offset to test does not pass.
+This does not read a map or a DEM. The caller supplies void fraction, slope, and offset. A pretty name is not an input.
 
-## Worked cases
+Void fraction above 0.15 is voids. Slope above 20 degrees is slope. Offset above 30 m is offset. Otherwise the pin is ok. A None offset is not an offset failure. A None void fraction or a None slope is missing, because that comparison cannot be made. A negative void fraction is not above the void gate, so slope and offset still apply.
 
-Apollo 11 and IM-1 Odysseus are named. The other pins are synthetic and each force one failure. None of them is a traverse a customer filed.
+On the command line, a missing field prints missing and is not scored. The process exits 0.
+
+## Worked pins
+
+`examples/pins.csv` is numbers the caller already has, plus one empty void fraction. Worked pins are not a landing clearance.
 
 ## What it will not do
 
-- Pretty-print a bad coordinate.
-- Fetch an elevation model in order to print the score.
-- Declare a landing safe.
+- Read a map, a tile, or a DEM.
+- Treat a pretty name as a score.
+- Declare a landing clear.
 
 ## Run
 
 ```
-git clone <this repo>
-cd pinfault
 PYTHONPATH=src python -m unittest tests.test_kernel
+PYTHONPATH=src python -m pinfault examples/pins.csv
 ```
 
-Python 3.12. No third-party packages. The test is the demo.
+The command prints the name and the integrity word for each row and exits 0. An empty cell prints missing and does not traceback.
+
+Python 3.11 or newer. No third-party packages.
+
+Copyright 2026 Digital Currensy Inc. Apache-2.0.

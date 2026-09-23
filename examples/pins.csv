@@ -1,0 +1,6 @@
+name,void_fraction,slope_deg,offset_m
+flat,0.02,2,10
+hole,0.20,2,10
+steep,0.02,25,10
+far,0.02,2,40
+blank,,2,10
