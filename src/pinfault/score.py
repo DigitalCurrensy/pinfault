@@ -13,15 +13,19 @@
 # limitations under the License.
 
 def integrity(void_fraction: float | None, slope_deg: float | None, offset_m: float | None) -> str:
-    if void_fraction is None:
+    if void_fraction is None or void_fraction < 0 or void_fraction > 1:
         return "missing"
     if void_fraction > 0.15:
         return "voids"
     if slope_deg is None:
         return "missing"
+    if slope_deg < 0:
+        return "missing"
     if slope_deg > 20:
         return "slope"
     if offset_m is None:
+        return "missing"
+    if offset_m < 0:
         return "missing"
     if offset_m > 30:
         return "offset"

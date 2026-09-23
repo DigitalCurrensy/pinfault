@@ -24,6 +24,7 @@ import sys
 from pathlib import Path
 
 from pinfault.score import integrity
+from pinfault.void_fraction import void_fraction
 
 
 def cell(text: str | None) -> float | None:
@@ -47,9 +48,19 @@ def main(argv: list[str] | None = None) -> int:
         reader = csv.DictReader(handle)
         if reader.fieldnames:
             reader.fieldnames = [name.strip() for name in reader.fieldnames]
+        fields = reader.fieldnames or []
+        has_counts = "n_invalid" in fields and "n_cells" in fields
         for record in reader:
             name = (record.get("name") or "").strip()
-            void = cell(record.get("void_fraction"))
+            if has_counts:
+                n_invalid = cell(record.get("n_invalid"))
+                n_cells = cell(record.get("n_cells"))
+                if n_invalid is None or n_cells is None:
+                    void = None
+                else:
+                    void = void_fraction(n_invalid, n_cells)
+            else:
+                void = cell(record.get("void_fraction"))
             slope = cell(record.get("slope_deg"))
             offset = cell(record.get("offset_m"))
             if void is None or slope is None or offset is None:

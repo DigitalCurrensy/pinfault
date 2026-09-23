@@ -19,6 +19,7 @@ from __future__ import annotations
 import io
 import math
 import sys
+import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -46,13 +47,21 @@ class ScoreTests(unittest.TestCase):
         self.assertEqual(integrity(0.02, 2, None), "missing")
         self.assertEqual(integrity(None, 2, 10), "missing")
         self.assertEqual(integrity(None, None, None), "missing")
-        self.assertEqual(integrity(-0.01, 2, 10), "ok")
-        self.assertEqual(integrity(-0.01, 25, 10), "slope")
-        self.assertEqual(integrity(-0.01, 2, 40), "offset")
+        self.assertEqual(integrity(-0.01, 2, 10), "missing")
+        self.assertEqual(integrity(-0.01, 25, 10), "missing")
+        self.assertEqual(integrity(-0.01, 2, 40), "missing")
         self.assertEqual(integrity(0.02, None, 10), "missing")
         self.assertEqual(integrity(-0.01, None, 10), "missing")
         self.assertEqual(integrity(0.20, None, None), "voids")
         self.assertEqual(integrity(0.02, 21, None), "slope")
+
+    def test_fraction_in_unit_interval_and_negative_measures(self) -> None:
+        self.assertEqual(integrity(0.20, 25, 50), "voids")
+        self.assertEqual(integrity(1.0, 25, 50), "voids")
+        self.assertEqual(integrity(1.01, 2, 10), "missing")
+        self.assertEqual(integrity(0.02, -1.0, 40), "missing")
+        self.assertEqual(integrity(0.02, 2, -1.0), "missing")
+        self.assertEqual(integrity(0.0, 0.0, 0.0), "ok")
 
 
 class VoidTests(unittest.TestCase):
@@ -124,6 +133,37 @@ class CliTests(unittest.TestCase):
         self.assertEqual(
             out.getvalue().splitlines(),
             ["flat ok", "hole voids", "steep slope", "far offset", "blank missing"],
+        )
+
+    def test_counts_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "counts.csv"
+            path.write_text(
+                "name,n_invalid,n_cells,slope_deg,offset_m\n"
+                "hole,20,100,2,10\n"
+                "flat,2,100,2,10\n"
+                "bad,101,100,2,10\n"
+                "full,100,100,2,10\n"
+                "neg,-1,100,2,10\n"
+                "down,2,100,-3,10\n"
+                "left,2,100,2,-4\n",
+                encoding="utf-8",
+            )
+            out = io.StringIO()
+            with redirect_stdout(out):
+                code = main([str(path)])
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            out.getvalue().splitlines(),
+            [
+                "hole voids",
+                "flat ok",
+                "bad missing",
+                "full voids",
+                "neg missing",
+                "down missing",
+                "left missing",
+            ],
         )
 
 
