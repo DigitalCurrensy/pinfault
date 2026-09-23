@@ -1,13 +1,14 @@
 # PINFAULT
 
-PINFAULT scores a map pin. A coordinate that looks official can still be the hazard.
+For a mapper dropping a landing pin onto ground that may be a void, a slope, or the wrong place.
 
 **Owner:** Digital Currensy Inc.
-**License:** Apache-2.0. Our code only. Cited maps and landings stay with their authors.
+**License:** Apache-2.0. Our code only. Cited data and papers stay with their authors.
+**Status:** Private until the owner publishes it.
 
 ## What it decides
 
-The pin stands, or it does not. Voids are checked first, then slope, then the offset from the named feature.
+The pin stands, or it does not. Voids first, then slope, then offset from the named feature.
 
 ## The rule
 
@@ -15,18 +16,20 @@ A pin inside a void fails. A pin on a slope past the limit fails. A pin offset f
 
 ## Worked cases
 
-The cases in this repository include the Apollo 11 lunar module, IM-1 Odysseus, and a set of synthetic pins that isolate one failure each: flat, void, rim, voids first, a null offset, equal sites, an undeclared identity, and a missing tile. The published pins are named. The synthetic pins are the desk’s own examples. None of them is a traverse a customer filed.
+Apollo 11 and IM-1 Odysseus are named. The other pins are synthetic and each force one failure. None of them is a traverse a customer filed.
 
 ## What it will not do
 
 - Pretty-print a bad coordinate.
-- Fetch a digital elevation model in order to print the score.
+- Fetch an elevation model in order to print the score.
 - Declare a landing safe.
 
 ## Run
 
 ```
+git clone <this repo>
+cd pinfault
 PYTHONPATH=src python -m unittest tests.test_kernel
 ```
 
-Notes under `docs/` are the build record. This page is the description.
+Python 3.12. No third-party packages. The test is the demo.
