@@ -1,48 +1,32 @@
 # PINFAULT
 
-The coordinate everyone trusts may be the thing that kills the traverse.
+PINFAULT scores a map pin. A coordinate that looks official can still be the hazard.
 
 **Owner:** Digital Currensy Inc.
-**Status:** Private. Independent tool. Not a NASA Space Apps 2026 submission.
-**License of our code:** Apache-2.0
+**License:** Apache-2.0. Our code only. Cited maps and landings stay with their authors.
 
-## One sentence
+## What it decides
 
-A pin on a lunar or Mars map looks official. Score it against DEM completeness, slope, named-feature offset, and frame mismatch — or say the pin is not a pin.
+The pin stands, or it does not. Voids are checked first, then slope, then the offset from the named feature.
 
-## Wave freeze
+## The rule
 
-- W0 catalog: Apollo 11 LM and IM-1 vs declared LOLA/SLDEM tile stats. Scorer named, not run.
-- W1 `score.py`: voids > 0.15, else slope > 20, else offset > 30, else ok. Voids first.
-- W2 one bad pin: PIN-A11-LM walked. West crater 400 m fails offset. Pretty-print is not a pass.
-- W3 memo template: paper on the pin. Offset and voids still issue. Apollo 12 is not this memo.
+A pin inside a void fails. A pin on a slope past the limit fails. A pin offset from the named feature fails. A pretty marker with a missing tile, a missing identity, or no offset to test does not pass.
 
-W4 surveyor pass waits. RIMKEEP locked.
+## Worked cases
 
-## Void fraction
+The cases in this repository include the Apollo 11 lunar module, IM-1 Odysseus, and a set of synthetic pins that isolate one failure each: flat, void, rim, voids first, a null offset, equal sites, an undeclared identity, and a missing tile. The published pins are named. The synthetic pins are the desk’s own examples. None of them is a traverse a customer filed.
 
-```
-void_fraction = n_invalid / n_cells
-```
+## What it will not do
 
-Invalid is nodata, fill, NaN, or out-of-range elevation. A fill value is a hole, not zero slope. Equality sits. DEM unfetched.
-
-Declared windows: A11 2/100 = 0.02 sits. IM-1 8/100 = 0.08 sits. Operator clip 20/100 = 0.20 trips voids first.
-
-## Apollo 12 is not this memo
-
-Davies-Colvin 2000 −3.01239 / −23.42157. Apollo-era 5718 m off. Wagner 2017 16 m off. Surveyor 3 ~180 m (NASA) / 155 m (LRO article). One coordinate remains PIN-A11-LM.
-
-## What it is not
-
-- Not a pretty-printed pin. Not Google Moon. Not QuickMap as the coordinate.
-- Not a live LOLA or SLDEM GeoTIFF GET.
-- Not survey-grade. Do not claim a surveyor this wave.
-- Not a certificate. Counsel unsigned.
-- Not RIMKEEP.
+- Pretty-print a bad coordinate.
+- Fetch a digital elevation model in order to print the score.
+- Declare a landing safe.
 
 ## Run
 
 ```
 PYTHONPATH=src python -m unittest tests.test_kernel
 ```
+
+Notes under `docs/` are the build record. This page is the description.
