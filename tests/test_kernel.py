@@ -40,10 +40,10 @@ class ScoreTests(unittest.TestCase):
         self.assertEqual(integrity(0.20, 25, 50), "voids")
         self.assertEqual(integrity(0.15, 2, 400), "offset")
         self.assertEqual(integrity(0.02, 2, 10), "ok")
-        self.assertEqual(integrity(0.02, 2, None), "ok")
+        self.assertEqual(integrity(0.02, 2, None), "missing")
 
     def test_none_offset_void_none_or_negative_slope_none(self) -> None:
-        self.assertEqual(integrity(0.02, 2, None), "ok")
+        self.assertEqual(integrity(0.02, 2, None), "missing")
         self.assertEqual(integrity(None, 2, 10), "missing")
         self.assertEqual(integrity(None, None, None), "missing")
         self.assertEqual(integrity(-0.01, 2, 10), "ok")

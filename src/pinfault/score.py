@@ -21,6 +21,8 @@ def integrity(void_fraction: float | None, slope_deg: float | None, offset_m: fl
         return "missing"
     if slope_deg > 20:
         return "slope"
-    if offset_m is not None and offset_m > 30:
+    if offset_m is None:
+        return "missing"
+    if offset_m > 30:
         return "offset"
     return "ok"

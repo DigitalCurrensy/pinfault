@@ -14,7 +14,7 @@ A word: voids, slope, offset, ok, or missing. Voids first, then slope, then offs
 
 This does not read a map or a DEM. The caller supplies void fraction, slope, and offset. A pretty name is not an input.
 
-Void fraction above 0.15 is voids. Slope above 20 degrees is slope. Offset above 30 m is offset. Otherwise the pin is ok. A None offset is not an offset failure. A None void fraction or a None slope is missing, because that comparison cannot be made. A negative void fraction is not above the void gate, so slope and offset still apply.
+Void fraction above 0.15 is voids. Slope above 20 degrees is slope. Offset above 30 m is offset. Otherwise the pin is ok. A missing offset is missing. It is not ok. A None void fraction or a None slope is missing, because that comparison cannot be made. A negative void fraction is not above the void gate, so slope and offset still apply.
 
 On the command line, a missing field prints missing and is not scored. The process exits 0.
 
