@@ -16,6 +16,8 @@
 
 from __future__ import annotations
 
+import math
+
 VOID_GATE = 0.15
 VOID_KINDS = ("nodata", "fill", "nan", "oor")
 WINDOW = 100
@@ -28,6 +30,8 @@ SIT = {"n_invalid": 15, "n_cells": 100, "void_fraction": 0.15}
 
 
 def void_fraction(n_invalid: float, n_cells: float) -> float | None:
+    if not math.isfinite(n_invalid) or not math.isfinite(n_cells):
+        return None
     if n_cells <= 0 or n_invalid < 0 or n_invalid > n_cells:
         return None
     return n_invalid / n_cells

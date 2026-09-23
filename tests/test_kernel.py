@@ -173,5 +173,11 @@ class FinitePinTests(unittest.TestCase):
         self.assertEqual(integrity(float("nan"), 2.0, 10.0), "missing")
 
 
+class VoidCountTests(unittest.TestCase):
+    def test_non_finite_count_is_none(self) -> None:
+        self.assertIsNone(void_fraction(float("nan"), 100.0))
+        self.assertIsNone(void_fraction(2.0, float("inf")))
+
+
 if __name__ == "__main__":
     unittest.main()
