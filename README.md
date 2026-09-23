@@ -4,8 +4,6 @@ For a mapper dropping a landing pin onto ground that may be a void, a slope, or 
 
 **Owner:** Digital Currensy Inc.
 **License:** Apache-2.0. Our code only. Cited data and papers stay with their authors.
-**Status:** Private until the owner publishes it.
-
 ## What it decides
 
 The pin stands, or it does not. Voids first, then slope, then offset from the named feature.

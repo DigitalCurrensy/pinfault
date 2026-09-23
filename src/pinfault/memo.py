@@ -7,7 +7,7 @@ from .void_fraction import CLIP, void_fraction
 from .walk import A11, A12
 
 TITLE = "PIN MEMO"
-OFFER = "site integrity memo $3k–$9k. Not an invoice."
+OFFER = "Unsigned. Not an invoice."
 COUNSEL = "unsigned"
 WORD_CAP = 80
 
