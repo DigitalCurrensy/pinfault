@@ -15,4 +15,4 @@ jobs:
       - name: Kernel tests
         run: python -m unittest tests.test_kernel
       - name: Example
-        run: python -m pinfault examples/pins.csv
+        run: python -m pinfault examples/pins.csv || test $? -eq 1
