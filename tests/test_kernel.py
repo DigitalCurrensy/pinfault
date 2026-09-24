@@ -129,7 +129,7 @@ class CliTests(unittest.TestCase):
         out = io.StringIO()
         with redirect_stdout(out):
             code = main([str(repo / "examples" / "pins.csv")])
-        self.assertEqual(code, 0)
+        self.assertEqual(code, 1)
         self.assertEqual(
             out.getvalue().splitlines(),
             [
@@ -158,7 +158,7 @@ class CliTests(unittest.TestCase):
             out = io.StringIO()
             with redirect_stdout(out):
                 code = main([str(path)])
-        self.assertEqual(code, 0)
+        self.assertEqual(code, 1)
         self.assertEqual(
             out.getvalue().splitlines(),
             [

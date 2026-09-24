@@ -23,6 +23,33 @@ PYTHONPATH=src python -m pinfault examples/grid.csv
 
 The rest of this file is the rule that command prints.
 
+## Record
+
+`--json` prints one object. The process exit code is that object's `exit`. 0 is a pass word (`ok`, `pass`, `scored`, `path`). 1 is a refusal. 2 means the file could not be read. `keep` is false. `absent` is what this output does not contain: a stamp, measured basin months, and the points inside a `.laz` file.
+
+This object is not WaterML and it is not a USGS response.
+
+```json
+{
+  "absent": [
+    "stamp",
+    "measured_months",
+    "laz_points"
+  ],
+  "desk": "pinfault",
+  "exit": 0,
+  "formula": "Voids, then slope, then offset. Ok is not a landing.",
+  "keep": false,
+  "rows": [
+    {
+      "line": "grid ok void=0.1 slope=5.710593137 offset=15.16167521 cells=10",
+      "word": "ok"
+    }
+  ],
+  "word": "ok"
+}
+```
+
 
 Score a pin against void fraction, slope, and offset. `examples/derived.csv` does not type those three: void fraction is the invalid count over the cell count, slope is the arctangent of rise over run, and offset is the lunar distance between two coordinates. `examples/grid.csv` does not type the count either. A cell of 0 is empty and a cell of 1 is not. One empty cell in ten is void fraction 0.1. Ok is not a landing.
 

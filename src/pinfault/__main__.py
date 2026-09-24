@@ -41,6 +41,9 @@ def cell(text: str | None) -> float | None:
         return None
 
 
+from .record import finish
+
+
 def _show(value: float | None) -> str:
     if value is None:
         return "missing"
@@ -51,9 +54,13 @@ def _show(value: float | None) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
+    as_json = "--json" in args
+    args = [item for item in args if item != "--json"]
     if len(args) != 1:
-        print("usage: python -m pinfault CSV", file=sys.stderr)
+        print("usage: python -m pinfault CSV [--json]", file=sys.stderr)
         return 2
+    lines: list[str] = []
+    words: list[str] = []
     with Path(args[0]).open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         if reader.fieldnames:
@@ -82,8 +89,9 @@ def main(argv: list[str] | None = None) -> int:
                 pair = [cell(rows[0].get(key)) for key in ("lat1", "lon1", "lat2", "lon2")]
                 offset = lunar_offset_m((pair[0], pair[1]), (pair[2], pair[3])) if all(item is not None for item in pair) else None
                 word = "missing" if None in (void, slope, offset) else integrity(void, slope, offset)
-                print(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)} cells={len(cells)}")
-            return 0
+                lines.append(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)} cells={len(cells)}")
+                words.append(word)
+            return finish("pinfault", "Voids, then slope, then offset. Ok is not a landing.", lines, as_json, words)
         for record in reader:
             name = (record.get("name") or "").strip()
             if has_counts:
@@ -110,8 +118,9 @@ def main(argv: list[str] | None = None) -> int:
                 word = "missing"
             else:
                 word = integrity(void, slope, offset)
-            print(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)}")
-    return 0
+            lines.append(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)}")
+            words.append(word)
+    return finish("pinfault", "Voids, then slope, then offset. Ok is not a landing.", lines, as_json, words)
 
 
 if __name__ == "__main__":
