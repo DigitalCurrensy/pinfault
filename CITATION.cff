@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: If you use this library, cite the repository.
+title: pinfault
+abstract: Void fraction, slope, and lunar offset for a landing-site check. You still supply the rise and the coordinates.
+authors:
+  - name: Digital Currensy Inc.
+license: Apache-2.0
+repository-code: https://github.com/DigitalCurrensy/pinfault
