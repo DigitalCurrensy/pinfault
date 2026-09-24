@@ -1,5 +1,29 @@
 # PINFAULT
 
+[![check](https://github.com/DigitalCurrensy/pinfault/actions/workflows/check.yml/badge.svg)](https://github.com/DigitalCurrensy/pinfault/actions/workflows/check.yml)
+
+For a landing-site check when you have cells, a rise, and two coordinates.
+
+A cell of 0 is empty and a cell of 1 is not. Void fraction is the empty count over the cell count. Slope is the arctangent of rise over run. Offset is the lunar distance between the two points. You still supply the rise and the coordinates.
+
+Ok is not a clearance to land.
+
+## Install
+
+```bash
+pip install -e .
+PYTHONPATH=src python -m unittest tests.test_kernel
+```
+
+## First command
+
+```bash
+PYTHONPATH=src python -m pinfault examples/grid.csv
+```
+
+The rest of this file is the rule that command prints.
+
+
 Score a pin against void fraction, slope, and offset. `examples/derived.csv` does not type those three: void fraction is the invalid count over the cell count, slope is the arctangent of rise over run, and offset is the lunar distance between two coordinates. `examples/grid.csv` does not type the count either. A cell of 0 is empty and a cell of 1 is not. One empty cell in ten is void fraction 0.1. Ok is not a landing.
 
 **Owner:** Digital Currensy Inc.

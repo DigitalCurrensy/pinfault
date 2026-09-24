@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pinfault"
 version = "0.1.0"
-description = "Score a pin against void fraction, slope, and offset."
+description = "Void fraction, slope, and lunar offset. Ok is not a clearance to land."
 requires-python = ">=3.11"
 license = {text = "Apache-2.0"}
 
