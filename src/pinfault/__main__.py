@@ -24,8 +24,9 @@ import math
 import sys
 from pathlib import Path
 
-from pinfault.score import integrity
+from pinfault.score import grade_deg, integrity
 from pinfault.void_fraction import void_fraction
+from pinfault.walk import lunar_offset_m
 
 
 def cell(text: str | None) -> float | None:
@@ -72,6 +73,15 @@ def main(argv: list[str] | None = None) -> int:
                 void = cell(record.get("void_fraction"))
             slope = cell(record.get("slope_deg"))
             offset = cell(record.get("offset_m"))
+            if slope is None and "rise_m" in fields and "run_m" in fields:
+                rise = cell(record.get("rise_m"))
+                run = cell(record.get("run_m"))
+                if rise is not None and run is not None:
+                    slope = grade_deg(rise, run)
+            if offset is None and {"lat1", "lon1", "lat2", "lon2"} <= set(fields):
+                pair = [cell(record.get(name)) for name in ("lat1", "lon1", "lat2", "lon2")]
+                if all(item is not None for item in pair):
+                    offset = lunar_offset_m((pair[0], pair[1]), (pair[2], pair[3]))
             if void is None or slope is None or offset is None:
                 word = "missing"
             else:

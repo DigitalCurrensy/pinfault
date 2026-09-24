@@ -39,3 +39,10 @@ def integrity(void_fraction: float | None, slope_deg: float | None, offset_m: fl
     if offset_m > 30:
         return "offset"
     return "ok"
+
+
+def grade_deg(rise_m: float, run_m: float) -> float | None:
+    """Degrees from a rise and a horizontal run. The run has to be positive."""
+    if not math.isfinite(rise_m) or not math.isfinite(run_m) or run_m <= 0:
+        return None
+    return math.degrees(math.atan(rise_m / run_m))

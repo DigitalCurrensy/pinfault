@@ -185,5 +185,18 @@ class VoidCountTests(unittest.TestCase):
         self.assertIsNone(void_fraction(2.0, float("inf")))
 
 
+class DerivedPinTests(unittest.TestCase):
+    def test_rise_and_two_coordinates_are_not_typed(self) -> None:
+        import subprocess
+        repo = Path(__file__).resolve().parents[1]
+        proc = subprocess.run(
+            [sys.executable, "-m", "pinfault", str(repo / "examples" / "derived.csv")],
+            cwd=repo, env={**__import__("os").environ, "PYTHONPATH": str(repo / "src")},
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(proc.stdout.strip(), "pair ok void=0.02 slope=5.710593137 offset=15.16167521")
+
+
 if __name__ == "__main__":
     unittest.main()
