@@ -60,6 +60,30 @@ def main(argv: list[str] | None = None) -> int:
             reader.fieldnames = [name.strip() for name in reader.fieldnames]
         fields = reader.fieldnames or []
         has_counts = "n_invalid" in fields and "n_cells" in fields
+        if "cell" in fields:
+            grouped: dict[str, list[dict[str, str]]] = {}
+            order: list[str] = []
+            for record in reader:
+                name = (record.get("name") or "").strip()
+                if name not in grouped:
+                    grouped[name] = []
+                    order.append(name)
+                grouped[name].append(record)
+            for name in order:
+                rows = grouped[name]
+                cells = [cell(row.get("cell")) for row in rows]
+                if any(item not in (0.0, 1.0) for item in cells):
+                    void = None
+                else:
+                    void = void_fraction(sum(1 for item in cells if item == 0.0), float(len(cells)))
+                rise = cell(rows[0].get("rise_m"))
+                run = cell(rows[0].get("run_m"))
+                slope = grade_deg(rise, run) if rise is not None and run is not None else None
+                pair = [cell(rows[0].get(key)) for key in ("lat1", "lon1", "lat2", "lon2")]
+                offset = lunar_offset_m((pair[0], pair[1]), (pair[2], pair[3])) if all(item is not None for item in pair) else None
+                word = "missing" if None in (void, slope, offset) else integrity(void, slope, offset)
+                print(f"{name} {word} void={_show(void)} slope={_show(slope)} offset={_show(offset)} cells={len(cells)}")
+            return 0
         for record in reader:
             name = (record.get("name") or "").strip()
             if has_counts:

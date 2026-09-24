@@ -1,6 +1,6 @@
 # PINFAULT
 
-Score a pin against void fraction, slope, and offset. `examples/derived.csv` does not type those three: void fraction is the invalid count over the cell count, slope is the arctangent of rise over run, and offset is the lunar distance between two coordinates. Ok is not a landing.
+Score a pin against void fraction, slope, and offset. `examples/derived.csv` does not type those three: void fraction is the invalid count over the cell count, slope is the arctangent of rise over run, and offset is the lunar distance between two coordinates. `examples/grid.csv` does not type the count either. A cell of 0 is empty and a cell of 1 is not. One empty cell in ten is void fraction 0.1. Ok is not a landing.
 
 **Owner:** Digital Currensy Inc.
 **Copyright:** 2026 Digital Currensy Inc.

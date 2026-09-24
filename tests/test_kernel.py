@@ -197,6 +197,20 @@ class DerivedPinTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertEqual(proc.stdout.strip(), "pair ok void=0.02 slope=5.710593137 offset=15.16167521")
 
+    def test_cells_are_counted(self) -> None:
+        import subprocess
+        repo = Path(__file__).resolve().parents[1]
+        proc = subprocess.run(
+            [sys.executable, "-m", "pinfault", str(repo / "examples" / "grid.csv")],
+            cwd=repo, env={**__import__("os").environ, "PYTHONPATH": str(repo / "src")},
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(
+            proc.stdout.strip(),
+            "grid ok void=0.1 slope=5.710593137 offset=15.16167521 cells=10",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
